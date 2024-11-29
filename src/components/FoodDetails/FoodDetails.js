@@ -16,24 +16,25 @@ function FoodDetails() {
      const [addToCarts,setAddTocarts] = useState(1);
      const [datas,setDatas] = useState()
 // first extras will show in here
-const [extra1,setExtra1] = useState({price:6,quanity:0,name:'Addition meat 80g '})
-const [extra2,setExtra2] = useState({price:3,quanity:0,name:'Extra Cheese'});
-const [extra3,setExtra3] = useState({price:3,quanity:0,name:'Fata Cheese'});
-const [extra4,setExtra4] = useState({price:3,quanity:0,name:'Black Olives'});
-const [extra5,setExtra5] = useState({price:3,quanity:0,name:'Green Olives'});
-const [extra6,setExtra6] = useState({price:3,quanity:0,name:'Jalapeno Olives'});
+const [extra1,setExtra1] = useState({price:6,quanity:0,name:'dodatkowe mięso 80g'})
+const [extra2,setExtra2] = useState({price:3,quanity:0,name:'dodatkowy ser'});
+const [extra3,setExtra3] = useState({price:3,quanity:0,name:'ser feta'});
+const [extra4,setExtra4] = useState({price:3,quanity:0,name:'oliwki'});
+const [extra5,setExtra5] = useState({price:3,quanity:0,name:'Jalapeno'});
 //second extra sauce function will work here
-const [sauce1,setSauce1] = useState({price:2,quanity:0,name:'garlic sauce'})
-const [sauce2,setSauce2] = useState({price:2,quanity:0,name:'Mild sauce'});
-const [sauce3,setSauce3] = useState({price:2,quanity:0,name:'ketchup'});
-const [sauce4,setSauce4] = useState({price:2,quanity:0,name:'Hot sauce'});
-const [sauce5,setSauce5] = useState({price:2,quanity:0,name:'BBQ sauce'});
-const [sauce6,setSauce6] = useState({price:2,quanity:0,name:'dill sauce'});
+const [sauce1,setSauce1] = useState({price:2,quanity:0,name:'Czosnek'})
+const [sauce2,setSauce2] = useState({price:2,quanity:0,name:'Łagodny '});
+const [sauce3,setSauce3] = useState({price:2,quanity:0,name:'Mieszane '});
+const [sauce4,setSauce4] = useState({price:2,quanity:0,name:'Ostry'});
+const [sauce5,setSauce5] = useState({price:2,quanity:0,name:'Ketczup'});
+const [sauce6,setSauce6] = useState({price:2,quanity:0,name:'BBQ'});
+const [sauce7,setSauce7] = useState({price:2,quanity:0,name:'KOPERKOWY'});
 
 
+    // const datert = cartDetail?.sizes[0]?.id;
+    // console.log(datert)
 
-
-    const [selectedId, setSelectedId] = useState(null);
+    const [selectedId, setSelectedId] = useState('small');
     // console.log(cartDetail)
     const [selectedMeat, setMeatvalue] = useState('');
     // after this somthing is missing
@@ -68,7 +69,7 @@ const [sauce6,setSauce6] = useState({price:2,quanity:0,name:'dill sauce'});
     const selectedItem = cartDetail?.sizes?.find(item => item.id === selectedId);
 //  console.log(cartDetail)
 
-    const extrasPrice = extra1.quanity *extra1.price + extra2.quanity *extra2.price+extra3.quanity *extra3.price+extra4.quanity *extra4.price+extra5.quanity *extra5.price+extra6.quanity *extra6.price;
+    const extrasPrice = extra1.quanity *extra1.price + extra2.quanity *extra2.price+extra3.quanity *extra3.price+extra4.quanity *extra4.price+extra5.quanity *extra5.price
     const saucePrice = sauce1.quanity *sauce1.price + sauce2.quanity *sauce2.price+sauce3.quanity *sauce3.price+sauce4.quanity *sauce4.price+sauce5.quanity *sauce5.price+sauce6.quanity *sauce6.price;
    
     const price = (selectedItem?.price * cartItems[cartDetail._id]) + extrasPrice +saucePrice;
@@ -88,10 +89,11 @@ const [sauce6,setSauce6] = useState({price:2,quanity:0,name:'dill sauce'});
 const email = localStorage.getItem('email');
 const extras = [
   extra1,
-  extra2,extra3,extra4,extra5,extra6,
+  extra2,extra3,extra4,extra5,
   
 ];
-const extraSauce =[sauce1,sauce2,sauce3,sauce4,sauce5,sauce6]
+
+const extraSauce =[sauce1,sauce2,sauce3,sauce4,sauce5,sauce6,sauce7]
     const data = {
       itemId:cartDetail._id,
       email:email,
@@ -106,6 +108,7 @@ const extraSauce =[sauce1,sauce2,sauce3,sauce4,sauce5,sauce6]
  
 
       
+    
     
     }
     
@@ -224,21 +227,7 @@ const extraSauce =[sauce1,sauce2,sauce3,sauce4,sauce5,sauce6]
      }
   }
   // number1
-  const handleInExtra6 =()=>{
-    const quant = extra6.quanity +1
-    const data = {name:extra6.name,quanity:quant,price:extra6.price}
-    // const data ={quanity:quant}
-    setExtra6(data)
-  }
-  const handleDecExtra6 = ()=>{
-     if(extra6.quanity>0){
-      const quant = extra6.quanity -1
-  const data = {name:extra6.name,quanity:quant,price:extra6.price}
-  setExtra6(data)
 
-
-     }
-  }
 
 
   // extra suace funtion will here
@@ -333,6 +322,21 @@ const extraSauce =[sauce1,sauce2,sauce3,sauce4,sauce5,sauce6]
 
      }
   }
+  const hanldeInSauce7=()=>{
+    const quant = sauce7.quanity +1
+    const data = {name:sauce7.name,quanity:quant,price:sauce7.price}
+    // const data ={quanity:quant}
+    setSauce7(data)
+  }
+  const handleDecSauce7= ()=>{
+     if(sauce7.quanity>0){
+      const quant = sauce7.quanity -1
+  const data = {name:sauce7.name,quanity:quant,price:sauce7.price}
+  setSauce7(data)
+
+
+     }
+  }
   useEffect(()=>{
     getDetailsCart();
 
@@ -367,16 +371,22 @@ const extraSauce =[sauce1,sauce2,sauce3,sauce4,sauce5,sauce6]
 
            
 <div className="bottom-btn">
- <div className="food-item-counter-plus">
- 
-   <img  onClick={()=>removeFromCart(cartDetail._id)}  src={assets.remove_icon_red} alt="" />
-   <p>{cartItems[cartDetail._id]}</p>
- <img  onClick={()=>addToCart(cartDetail._id,data)}  src={assets.add_icon_green} alt="" /> 
-  </div>
+   { !cartItems[id]
+             ? <div  className="food-item-counter-plus">
+             <img onClick={()=>removeFromCart(id)} src={assets.remove_icon_red} alt="" />
+             <p>0</p>
+     <img  onClick={()=>addToCart(id)} src={assets.add_icon_green} alt="" /> 
+            </div>
+             : <div  className="food-item-counter-plus">
+              <img onClick={()=>removeFromCart(id)} src={assets.remove_icon_red} alt="" />
+              <p>{cartItems[id]}</p>
+      <img  onClick={()=>addToCart(id)} src={assets.add_icon_green} alt="" /> 
+             </div>
+                
+            }
  
  <button  onClick={()=>addToCartBtn(data)}className='btm-btn'>
-   Add To Cart
- </button>
+ dodaj do koszyka </button>
 </div>
 </div>
      <div className="food-item">
@@ -401,10 +411,10 @@ const extraSauce =[sauce1,sauce2,sauce3,sauce4,sauce5,sauce6]
            <div className="radio-container">
             <div className="radio-title">
                 <div className="chose">
-                   <p>Choose Your Size</p>
-                   <span>Select</span>
+                   <p>Wybierz rozmiar:</p>
+                   <span>Wybierać</span>
                 </div>
-                <span className='radio-req'>1Required</span>
+                <span className='radio-req'>Wymagane</span>
             </div>
           
             <div className="radio-select">
@@ -421,6 +431,8 @@ const extraSauce =[sauce1,sauce2,sauce3,sauce4,sauce5,sauce6]
  value={size.id}
  onChange={() => setSelectedId(size.id)}
  required
+ 
+ 
  
  />
   <label className="form-check-label" htmlFor="flexRadioDefault1">
@@ -446,10 +458,10 @@ const extraSauce =[sauce1,sauce2,sauce3,sauce4,sauce5,sauce6]
            <div className="radio-container mt-5">
             <div className="radio-title">
                 <div className="chose">
-                   <p>Type Of Meat</p>
-                   <span>Select</span>
+                   <p>Rodzaj mięsa:  </p>
+                   <span>Wybierać</span>
                 </div>
-                <span className='radio-req'>1 Required</span>
+                <span className='radio-req'>Wymagane</span>
             </div>
           
             <div className="radio-select">
@@ -489,10 +501,10 @@ const extraSauce =[sauce1,sauce2,sauce3,sauce4,sauce5,sauce6]
            <div className="radio-container mt-5">
             <div className="radio-title">
                 <div className="chose">
-                   <p>Sauce of your choice</p>
-                   <span>Select</span>
+                   <p>Sos do wyboru: </p>
+                   <span>Wymagane</span>
                 </div>
-                <span className='radio-req'>Required</span>
+                <span className='radio-req'>wymagany</span>
             </div>
           
             <div className="radio-select">
@@ -532,10 +544,10 @@ const extraSauce =[sauce1,sauce2,sauce3,sauce4,sauce5,sauce6]
            <div className="radio-container mb-5">
             <div className="radio-title">
                 <div className="chose">
-                   <p>Extras</p>
-                   <span>For you Want</span>
+                   <p>Dodatki: </p>
+                   <span>Jeśli chcesz</span>
                 </div>
-                <span className='radio-req'>Optional</span>
+                <span className='radio-req'>fakultatywny</span>
             </div>
       
             {/* start red tell here for first one */}
@@ -583,13 +595,7 @@ const extraSauce =[sauce1,sauce2,sauce3,sauce4,sauce5,sauce6]
              <p>{extra5.name}  {extra5.price} PLN</p>
                   </div>
             {/* start red tell here for first one */}
-                <div  className="red-tell">
-              <div className="food-item-counter-plus">
-                  <button onClick={handleDecExtra6}   className='btner hover'>-</button> 
-                  <p>{extra6.quanity}</p>
-                  <button onClick={handleInExtra6} className='btner hover'>+</button></div>
-             <p>{extra6.name}  {extra6.price} PLN</p>
-                  </div>
+              
               
           </div>
 
@@ -597,10 +603,10 @@ const extraSauce =[sauce1,sauce2,sauce3,sauce4,sauce5,sauce6]
           <div className="radio-container mb-5">
             <div className="radio-title">
                 <div className="chose">
-                   <p>Extra sauce</p>
-                   <span>count</span>
+                   <p>Extra sos:</p>
+                   <span>Jeśli chcesz</span>
                 </div>
-                <span className='radio-req'>Optional</span>
+                <span className='radio-req'>fakultatywny</span>
             </div>
             {/* extra sacue will appear in here */}
           <div className="red-tell" >     
@@ -666,6 +672,17 @@ const extraSauce =[sauce1,sauce2,sauce3,sauce4,sauce5,sauce6]
        </div>
               
      <p>{sauce6.name} PLN  {sauce6.price} </p>
+    
+                </div>
+            {/* extra sacue will appear in here */}
+          <div className="red-tell" >     
+                <div className="food-item-counter-plus">
+           <button  onClick={handleDecSauce7} className='btner hover'>-</button> 
+                   <p>{sauce7.quanity}</p>
+          <button onClick={hanldeInSauce7}  className='btner hover'>+</button>
+       </div>
+              
+     <p>{sauce7.name} PLN  {sauce7.price} </p>
     
                 </div>
            

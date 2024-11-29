@@ -1,8 +1,10 @@
 import React from 'react'
 import './Footer.css'
 import { assets } from '../../assets/assets'
+import { useNavigate } from 'react-router-dom'
 
 function Footer() {
+    const navigate = useNavigate();
   return (
    <div className="footer" id='footer'>
     <div className="footer-content">
@@ -20,22 +22,22 @@ function Footer() {
         <div className="footer-content-center">
            <h2>COMPANY</h2>
            <ul>
-            <li>Home</li>
+            <li onClick={()=>{navigate('/')}}>Home</li>
             <li>About Us</li>
-            <li>Delevery</li>
+            <li onClick={()=>navigate('/delivery')}>Delevery</li>
             <li>Pryvaci Polici</li>
            </ul>
         </div>
         <div className="footer-content-right">
          <h2>GET IN TOUCh</h2>
          <ul>
-            <li>+880 1962637771</li>
-            <li>itabdurrahim22@gmail.com</li>
+            <li>+48 517898746</li>
+            <li>manager@deltakebab.com</li>
          </ul>
         </div>
     </div>
     <hr />
-    <p className="footer-copyright">Compyright 2024 c Tomto.com . All right Reserved </p>
+    <p className="footer-copyright">Compyright 2024  Delta Kabab . All right Reserved </p>
    </div>
   )
 }

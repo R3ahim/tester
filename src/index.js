@@ -5,15 +5,22 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom'
 import StoreContextProvider from './components/context/StoreContext.js'
+import { QueryClient, QueryClientProvider } from "react-query";
+const queryClient = new QueryClient();
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
+<QueryClientProvider client={queryClient}>
+
+
   <StoreContextProvider>
   
   <App />
   
   
   </StoreContextProvider>
+  </QueryClientProvider>
   </BrowserRouter>
 );
 

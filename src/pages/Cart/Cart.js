@@ -1,29 +1,66 @@
 import React, { useContext, useState } from 'react'
 import './Cart.css'
 import { StoreContext } from '../../components/context/StoreContext'
-import { useNavigate } from 'react-router-dom'
+import { json, useNavigate } from 'react-router-dom'
 import { toFormData } from 'axios'
 import { assets } from '../../assets/assets'
 import axios from 'axios'
+import { useQuery } from 'react-query'
 
 const Cart = () => {
 
+  const [street, setStreet] = useState('');
+  const [house, setHouse] = useState('');
+  const [city, setCity] = useState('');
+  const [distance, setDistance] = useState(null);
+  const [paymentImple, setPaymentImple] = useState('Dostawa');
+
+
   const navigate = useNavigate();
-    const {cartItems,removeFromCart,getTotalCartAmount,url,cartDatas,filterData} = useContext(StoreContext);
+    const {cartItems,removeFromCart,getTotalCartAmount,url,cartDatas,fetchCartData,filterData} = useContext(StoreContext);
+
+    const email = localStorage.getItem('email');
+
+        const { data: jsonData, error2, isLoading2 ,refetch } = useQuery("jsonData", fetchCartData);
+        
+        // const filterData =jsonData?.filter((e)=>e?.email === email);
+        
+        
+        
+        if(isLoading2){
+          return <h1>Loding data . please wait</h1>
+        }
 
 
       
-      const [street, setStreet] = useState('');
-      const [house, setHouse] = useState('');
-      const [city, setCity] = useState('');
-      const [distance, setDistance] = useState(null);
       const address1 = 'Jodłowa 11A, 83-110 Tczew, Poland'
       // const address1 = 'Jodłowa 11A, 83-110 Tczew, Poland'
     
-      const apiKey = 'AlzaSy8CAJZTzcPZl3yhDq5T07T-4WD-uZE-qMY'; // Replace with your actual API key
+      const apiKey ='AlzaSyTZ_eyJWeHxBphJBh4fcoxo2oB_b7QTkvA' // Replace with your actual API key
       const fullAddress = street+','+ house + ',' + city;
     
+      const TotalExtras = filterData ?.reduce((acc, item) => {
+        const itemSum = item?.extra.reduce((sum, extra) => sum + (extra.price * extra.quanity), 0);
+        return acc + itemSum;
+      }, 0);
+      const totalExraSuace = filterData?.reduce((acc, item) => {
+        const itemSum = item?.extraSauce.reduce((sum, extra) => sum + (extra.price * extra.quanity), 0);
+        return acc + itemSum;
+      }, 0);
+      
+      const totalAmounts = getTotalCartAmount + totalExraSuace + TotalExtras;
       const calculateDistance = async () => {
+        
+
+
+        localStorage.setItem('paymentImple',paymentImple)
+
+
+        if(paymentImple === 'Dostawa'){
+          if(totalAmounts <30 ){
+            return alert('Minimum order is 30')
+          }
+          
         if (!address1 || !street || !house || !city) {
           alert("Please fill in all fields.");
           return;
@@ -48,79 +85,22 @@ const Cart = () => {
             setDistance(distanceData.distance.text);
             localStorage.setItem('destence',distanceData.distance.text)
             localStorage.setItem('locate',fullAddress)
+            localStorage.setItem('placeLocate',distanceData.distance.text)
           } else {
             alert("Unable to calculate distance.");
           }
         } catch (error) {
           console.error("Error fetching distance data", error);
         }
+
+        }
+     
         navigate('/order')
       };
     
-      // const handleLocateMe = () => {
-      //   if (navigator.geolocation) {
-      //     navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-      //   } else {
-      //     setError('Geolocation is not supported by this browser.');
-      //   }
-      // };
-    
-      // const successCallback = async (position) => {
-      //   const { latitude, longitude } = position.coords;
-        
-      //   try {
-      //     // Reverse geocoding to get the address from lat/lng
-      //     const response = await axios.get(`https://maps.gomaps.pro/maps/api/geocode/json`, {
-      //       params: {
-      //         latlng: `${latitude},${longitude}`,
-      //         key: apiKey,
-      //       },
-      //     });
-      //  console.log(response.data)
-      //     const addressComponents = response.data.results[0].address_components;
-    
-      //     // Extract street, house number, and city from the address components
-      //     const street = addressComponents.find(component =>
-      //       component.types.includes('route')
-      //     )?.long_name || '';
-          
-      //     const house = addressComponents.find(component =>
-      //       component.types.includes('street_number')
-      //     )?.long_name || '';
-          
-      //     const city = addressComponents.find(component =>
-      //       component.types.includes('locality')
-      //     )?.long_name || '';
-    
-      //     setLocationData({ street, house, city });
-      //   } catch (error) {
-      //     setError("Failed to retrieve address from the geolocation.");
-      //     console.error("Error fetching geolocation data", error);
-      //   }
-      // };
-    
-      // const errorCallback = (error) => {
-      //   switch(error.code) {
-      //     case error.PERMISSION_DENIED:
-      //       setError("User denied the request for Geolocation.");
-      //       break;
-      //     case error.POSITION_UNAVAILABLE:
-      //       setError("Location information is unavailable.");
-      //       break;
-      //     case error.TIMEOUT:
-      //       setError("The request to get user location timed out.");
-      //       break;
-      //     case error.UNKNOWN_ERROR:
-      //       setError("An unknown error occurred.");
-      //       break;
-      //     default:
-      //       setError("An unknown error occurred.");
-      //   }
-      // };
+      
 
-
-
-
+      refetch();
 
    
   
@@ -139,7 +119,7 @@ const Cart = () => {
             </div>
             <br />
             <hr />
-            {filterData.map((item,index)=>{
+            {filterData?.map((item,index)=>{
                 if(cartItems[item.itemId ]>0){
                     return(
                       <div key={item._id}>
@@ -163,86 +143,97 @@ const Cart = () => {
             })}
         </div>
         <div className="cart-bottom">
-            {/* <div className="cart-total">
-                <h2>Cart Totals</h2>
-                <div>
-                    <div className="cart-total-details">
-                        <p>Subtotal</p>
-                        <p>${getTotalCartAmount()}</p>
-                    </div>
-                    <hr />
-                    <div className="cart-total-details">
-                    <p>Delivery Fee</p>
-                    <p>${getTotalCartAmount()===0?0:2}</p>
-                    </div>
-                    <hr />
-                    <div className="cart-total-details">
-                        <b>Total</b>
-                        <b>${getTotalCartAmount()===0?0:getTotalCartAmount(0) +2}</b>
-                    </div>
-                </div>
-                    <button onClick={()=>navigate('/order')}>PROCEED TO CHECKOUT</button>
-            </div> */}
+       
             <div className="cart-total">
               <div className="fullfill">
-                <h3>Fulfillment options</h3>
-                {/* <div>
-  
-      
-      {error && <p style={{color: 'red'}}>{error}</p>}
-      
-      {locationData.street && (
-        <div>
-          <p><strong>Street:</strong> {locationData.street}</p>
-          <p><strong>House:</strong> {locationData.house}</p>
-          <p><strong>City:</strong> {locationData.city}</p>
-        </div>
-      )}
-    </div> */}
-               <div className="location">
-               {/* <button className="loc-btn " onClick={handleLocateMe}>
-               Locate Me <img src={assets.search_icon} alt=''/>
-               </button> */}
-               <div className="loc mt-4">
-                 <form>
-  <div className="row mb-4">
-    <div className="col">
-      <div data-mdb-input-init className="form-outline">
-        <input   type="text" 
-          value={street} 
-          onChange={(e) => setStreet(e.target.value)} 
-          placeholder="Enter street"  id="form3Example1" className="form-control" />
-        <label className="form-label" htmlFor="form3Example1">Street<span className='text-danger'>*</span></label>
+
+
+              <h3>Fulfillment options</h3>
+
+              <div className="container">
+      <h5>Method of implementation  </h5>
+
+      <div
+        className={`option-container ${paymentImple === 'Cash on Card' ? 'selected' : ''}`}
+      >
+        <input
+        
+          type="radio"
+          id="delivers"
+          value="Dostawa"
+          checked={paymentImple === 'Dostawa'}
+            
+          onChange={()=>setPaymentImple('Dostawa')}
+        />
+        <label htmlFor="delivers">Dostawa</label>
       </div>
-    </div>
-    <div className="col">
-      <div data-mdb-input-init className="form-outline">
-        <input type="text" 
-          value={house} 
-          onChange={(e) => setHouse(e.target.value)} 
-          placeholder="Enter house number"  id="form3Example2" className="form-control" />
-        <label className="form-label" htmlFor="form3Example2">House Number<span className='text-danger'>*</span></label>
+
+     
+      <div
+        className={`option-container ${paymentImple === 'Online Payment' ? 'selected' : ''}`}
+      >
+        <input
+          type="radio"
+          id="onlinePaymentImple"
+          value="PickUP"
+          checked={paymentImple === 'PickUP'}
+          onChange={()=>setPaymentImple("PickUP")}
+        />
+        <label htmlFor="onlinePaymentImple">PickUP</label>
       </div>
+
     </div>
-  </div>
-
-  <div data-mdb-input-init className="form-outline mb-4">
-    <input     type="text" 
-          value={city} 
-          onChange={(e) => setCity(e.target.value)} 
-          placeholder="Enter city"  id="form3Example3" className="form-control" />
-    <label className="form-label" htmlFor="form3Example3">City<span className='text-danger'>*</span></label>
-  </div>
 
 
+              {paymentImple ==='Dostawa'?  <div className="location">
+
+<div className="loc mt-4">
+
+  <form>
+  <h5>Area of implementation  </h5>
+
+<div className="row mb-4">
+<div className="col">
+<div data-mdb-input-init className="form-outline">
+<input   type="text" 
+value={street} 
+onChange={(e) => setStreet(e.target.value)} 
+placeholder="Ulica"  id="form3Example1" className="form-control" />
+<label className="form-label" htmlFor="form3Example1">Ulica<span className='text-danger'>*</span></label>
+</div>
+</div>
+<div className="col">
+<div data-mdb-input-init className="form-outline">
+<input type="text" 
+value={house} 
+onChange={(e) => setHouse(e.target.value)} 
+placeholder="Numer domu"  id="form3Example2" className="form-control" />
+<label className="form-label" htmlFor="form3Example2">Numer domu<span className='text-danger'>*</span></label>
+</div>
+</div>
+</div>
+
+<div data-mdb-input-init className="form-outline mb-4">
+<input     type="text" 
+value={city} 
+onChange={(e) => setCity(e.target.value)} 
+placeholder="Miasto"  id="form3Example3" className="form-control" />
+<label className="form-label" htmlFor="form3Example3">Miasto<span className='text-danger'>*</span></label>
+</div>
 
 
 
-  <button data-mdb-ripple-init onClick={calculateDistance} type="button" className="btn btn-primary btn-block mb-4">Find Out</button>
+
+
 
 </form>
-               </div>
-               </div>
+</div>
+</div>:""}
+              
+<button data-mdb-ripple-init onClick={calculateDistance} type="button">Find Out</button>
+
+
+
               </div>
             </div>
 

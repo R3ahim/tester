@@ -12,9 +12,10 @@ const {cartItems,addToCart,removeFromCart,url} = useContext(StoreContext)
   return (
     
     <div className="food-item">
+    <Link to={'/ordering/' +id}>
         <div className="food-item-img-container">
             <img src={url + "/images/" + image} alt="" className="food-item-image" />
-            { !cartItems[id]
+            {/* { !cartItems[id]
              ?<img className='add' onClick={()=>addToCart(id)} src={assets.add_icon_white} alt=''/>
              : <div  className="food-item-counter">
               <img onClick={()=>removeFromCart(id)} src={assets.remove_icon_red} alt="" />
@@ -22,16 +23,17 @@ const {cartItems,addToCart,removeFromCart,url} = useContext(StoreContext)
       <img  onClick={()=>addToCart(id)} src={assets.add_icon_green} alt="" /> 
              </div>
                 
-            }
+            } */}
         </div>
         <div className="food-item-info">
             <div className="food-item-name-rating">
                 <p>{name}</p>
-                <Link to={'/ordering/' +id}><img onClick={()=>localStorage.setItem('as',JSON.stringify([{}]))} src={assets.rating_starts} alt="" /></Link>
+                <img onClick={()=>localStorage.setItem('as',JSON.stringify([{}]))} src={assets.rating_starts} alt="" />
             </div>
             <p className='food-item-desc'>{description}</p>
-            <p className="food-item-price">${price}</p>
+            <p className="food-item-price">PLN {price}</p>
         </div>
+        </Link>
     </div>
   )
 }

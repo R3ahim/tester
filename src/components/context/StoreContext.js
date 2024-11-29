@@ -1,26 +1,22 @@
 import axios from "axios";
 import { createContext, useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 // import { food_list ,moreExtra,sauceOrder} from "../../assets/assets";
-
+        const url ="https://server.deltakebab.com"
+// const attendData = async () => {
+//     const response = await axios.get(url + '/api/cart/list');
+//     return response.data;
+//   };
 export const StoreContext = createContext(null)
 const StoreContextProvider = (props) =>{
     
+    
     let [cartItems,setCartItems]= useState({});
     const navigate = useNavigate();
-    // console.log(carts,'somthijdljasldf')
-    // const [extraItems,setExtraItems]= useState({});//first one
-    // const [extraExItems,setExtraExItems] = useState([])//first one
-
-    // const [extrasuce,setExtraSauce]= useState({});//second one
-    // const [extraSauceItems,setExtraSauceItems] = useState([])//seocnd one
-//  get all extra item
-
-//    }
-// console.log(size)
+  
 const email = localStorage.getItem('email');
 
-    const url = "https://reserver-vu5s.onrender.com";
     const [token,setToken] = useState("");
     
    const [food_list,setFoodList] = useState([])
@@ -51,10 +47,18 @@ const email = localStorage.getItem('email');
         }
 
     }
-   const  addToCartBtn = async(items) =>{
+    const fetchCartData = async ()=>{
+        const response = await axios.get(url + '/api/cart/list');
     
+        // setCartDatas(response.data.data)
+        setCartDatas(response.data.data);
+        return(response.data.data)
+    
+       }
+   const  addToCartBtn = async(items) =>{
+    // console.log(items,55)
 
-    if(token){
+    if(token ){
                 await axios.post(url + '/api/cart/addBtn',items,{headers:{token}})
                 // console.log(items)
 
@@ -79,6 +83,7 @@ const email = localStorage.getItem('email');
     navigate('/cart')
  
 }
+        
 
    
     const removeFromCart = async (itemId) =>{
@@ -90,6 +95,8 @@ const email = localStorage.getItem('email');
     }
 
     }
+    const { data: jsonData, error2, isLoading2 ,refetch } = useQuery("jsonData", fetchCartData);
+
    const  getTotalCartAmount = ()=>{
     let totalAmount = 0;
     for(const item in cartItems )
@@ -98,6 +105,7 @@ const email = localStorage.getItem('email');
             let itemInfo = filterData.find((product)=>product.itemId===item);
             if(itemInfo?.sizePrice == undefined){
                 console.log('someting')
+                
             }
             else{
                 totalAmount += itemInfo?.sizePrice * cartItems[item] ;
@@ -106,7 +114,7 @@ const email = localStorage.getItem('email');
         }
       
     }
-    console.log(totalAmount)
+    // console.log(totalAmount)
     return totalAmount;
    }
 
@@ -114,16 +122,15 @@ const email = localStorage.getItem('email');
     const response = await axios.get(url + '/api/food/list');
     setFoodList(response.data.data)
    }
-   const fetchCartData = async ()=>{
-    const response = await axios.get(url + "/api/cart/list")
-    setCartDatas(response.data.data)
-   }
+ 
     
    const loadCartData = async(token) =>{
        const response = await axios.post(url + "/api/cart/get",{},{headers:{token}});
        setCartItems(response.data.cartData)
     
    }
+
+
 // console.log({size},'form 117')
 
       useEffect(()=>{
@@ -138,6 +145,8 @@ const email = localStorage.getItem('email');
          }
          loadData();
       },[])
+      refetch()
+
     //   console.log(n,'n will apear hear')
 
     const contextValue= {
@@ -147,7 +156,7 @@ const email = localStorage.getItem('email');
     addToCart,
     removeFromCart,
     getTotalCartAmount,
-    url,token,setToken,addToCartBtn,filterData
+    url,token,setToken,addToCartBtn,filterData,fetchCartData
     
     
 

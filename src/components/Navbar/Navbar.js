@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { StoreContext } from '../context/StoreContext'
 
 const Navbar = ({setShowLogin}) => {
-  const [menu,setMenu] = useState('menu');
+  const [menu,setMenu] = useState('home');
   const {getTotalCartAmount,token,setToken} = useContext(StoreContext)
   
   const navigate = useNavigate()
@@ -18,12 +18,13 @@ const Navbar = ({setShowLogin}) => {
    }
   return (
     <div className='navbar'>
-     <Link to={'/'}><p className='pt'>DELTA KABAB</p></Link>
+     <Link to={'/'}><img style={{width:'60px'}} className='imgt' src='https://restaumatic-production.imgix.net/uploads/restaurants/275281/logo/1689151634.png?auto=compress%2Cformat&crop=focalpoint&fit=clip&h=500&w=500'/></Link>
+     {/* <Link to={'/'}><p className='pt'>DELTA KABAB</p></Link> */}
      <ul className='navbar-menu'>
-      <li  onClick={()=>{setMenu("home")}} className={menu==="home"?"active":""}>Home</li>
-      <li  onClick={()=>{setMenu("menu")}}  className={menu==="menu"?"active":""}>Menu</li>
+      <li  onClick={()=>{setMenu("home")}} className={menu==="home"?"active ahed":"ahed"}><Link to={'/'}>Home</Link></li>
+      <li  onClick={()=>{setMenu("menu")}}  className={menu==="menu"?"active":""}><Link to={'/menu'}>Menu</Link></li>
       <li onClick={()=>{setMenu("Delivery")}} className={menu==="Delivery"?"active":""}><Link to={'/delivery'}>Delivery</Link></li>
-      <li onClick={()=>{setMenu("contact-us")}} className={menu==="contact-us"?"active":""}>Contact us</li>
+      <li onClick={()=>{setMenu("contact-us")}} className={menu==="contact-us"?"active ahed":"ahed"}><Link  to={'/contact'}>Contact</Link></li>
      </ul>
      <div className="navbar-right">
       <img  className='ser' src={assets.search_icon} alt="" />
